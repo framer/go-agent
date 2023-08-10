@@ -30,7 +30,10 @@ func (rw *replacementResponseWriter) Write(b []byte) (n int, err error) {
 
 	headersJustWritten(rw.thd, http.StatusOK, hdr)
 
-	secureAgent.SendEvent("INBOUND_WRITE", string(b), hdr)
+	// FRAMER: Do not do this, as it allocates and copies memory in a hot path.
+	// See https://github.com/newrelic/go-agent/issues/765
+	//secureAgent.SendEvent("INBOUND_WRITE", string(b), hdr)
+	// END FRAMER
 	return
 }
 
